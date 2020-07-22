@@ -5,14 +5,19 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"strconv"
 	"strings"
 )
 
 const (
 	// CMD
-	CMDPing     = "ping"
-	CMDSet      = "set"
-	ProtoPrefix = '*'
+	CMDPing         = "ping"
+	CMDSet          = "set"
+	CMDGet          = "get"
+	ProtoPrefix     = '*'
+	ReplyTypeCode   = "code"
+	ReplyTypeNumber = "number"
+	ReplyTypeBulk   = "bulk"
 )
 
 type Request struct {
@@ -21,7 +26,10 @@ type Request struct {
 }
 
 type Reply struct {
-	Data interface{}
+	Type   string
+	Code   string
+	Number int
+	Data   interface{}
 }
 
 func parseRequest(conn io.ReadCloser) (*Request, error) {
@@ -107,5 +115,43 @@ func malformedMissingCRLF() error {
 }
 
 func parseReply(reply *Reply) string {
-	return "+PONG\r\n"
+	var str string
+	switch reply.Type {
+	case ReplyTypeCode:
+		str = "+" + reply.Code
+	case ReplyTypeNumber:
+		str = ":" + strconv.Itoa(reply.Number)
+	case ReplyTypeBulk:
+		str = bulkReply(reply.Data)
+	default:
+		// TODO err return
+	}
+	str += "\r\n"
+	return str
+}
+
+func bulkReply(data interface{}) string {
+	switch v := data.(type) {
+	case string:
+		{
+			l := len(v)
+			if l == 0 {
+				return "$-1"
+			}
+			return "$" + strconv.Itoa(l) + "\r\n" + v
+		}
+	case []byte:
+		{
+			l := len(v)
+			if l == 0 {
+				return "$-1"
+			}
+			return "$" + strconv.Itoa(l) + "\r\n" + string(v)
+		}
+	case int:
+		{
+			return ":" + strconv.Itoa(v)
+		}
+	}
+	return "" //TODO Err
 }

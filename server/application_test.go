@@ -13,5 +13,5 @@ func Test_ping(t *testing.T) {
 	}
 	reply, err := apply(request)
 	assert.NoError(t, err)
-	assert.Equal(t, "pong", reply.Data)
+	assert.Equal(t, "pong", reply.Code)
 }
