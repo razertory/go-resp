@@ -106,6 +106,6 @@ func malformedMissingCRLF() error {
 	return fmt.Errorf("Mailformed request: line should end with \\r\\n")
 }
 
-func parseReply(reply *Reply) []byte {
-	return []byte("$4\r\nPONG\r\n")
+func parseReply(reply *Reply) string {
+	return "+PONG\r\n"
 }

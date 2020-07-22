@@ -31,6 +31,6 @@ func handle(conn net.Conn) {
 			return // TODO return err code
 		}
 		data := parseReply(reply)
-		conn.Write(data)
+		conn.Write([]byte(data))
 	}
 }
