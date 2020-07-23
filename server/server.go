@@ -22,15 +22,26 @@ func Run() {
 func handle(conn net.Conn) {
 	defer conn.Close()
 	for {
-		request, err := parseRequest(conn)
+		reply, err := func() (*Reply, error) {
+			request, err := parseRequest(conn)
+			if err != nil {
+				return nil, err
+			}
+			reply, err := apply(request)
+			if err != nil {
+				return nil, err
+			}
+			return reply, nil
+		}()
 		if err != nil {
-			return // TODO return err code
-		}
-		reply, err := apply(request)
-		if err != nil {
-			return // TODO return err code
+			conn.Write([]byte(redisErr(err)))
+			continue
 		}
 		data := parseReply(reply)
 		conn.Write([]byte(data))
 	}
+}
+
+func redisErr(err error) string {
+	return "-ERR " + err.Error() + "\r\n"
 }

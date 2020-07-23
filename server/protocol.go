@@ -11,7 +11,6 @@ import (
 
 const (
 	// CMD
-	CMDPing         = "ping"
 	CMDSet          = "set"
 	CMDGet          = "get"
 	ProtoPrefix     = '*'
