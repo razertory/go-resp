@@ -15,11 +15,11 @@ func Run() {
 		if err != nil {
 			panic(err)
 		}
-		go handle(conn)
+		go handleConn(conn)
 	}
 }
 
-func handle(conn net.Conn) {
+func handleConn(conn net.Conn) {
 	defer conn.Close()
 	for {
 		reply, err := func() (*Reply, error) {

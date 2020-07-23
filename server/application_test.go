@@ -8,10 +8,10 @@ import (
 
 func Test_ping(t *testing.T) {
 	request := &Request{
-		CMD:  "ping",
+		CMD:  CMDPing,
 		Args: nil,
 	}
 	reply, err := apply(request)
 	assert.NoError(t, err)
-	assert.Equal(t, "pong", reply.Code)
+	assert.Equal(t, CodePong, reply.Code)
 }
