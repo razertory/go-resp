@@ -119,8 +119,6 @@ func parseReply(reply *Reply) string {
 		str = ":" + strconv.Itoa(reply.Number)
 	case ReplyTypeBulk:
 		str = bulkReply(reply.Data)
-	default:
-		// TODO err return
 	}
 	str += "\r\n"
 	return str
@@ -149,5 +147,5 @@ func bulkReply(data interface{}) string {
 			return ":" + strconv.Itoa(v)
 		}
 	}
-	return "" //TODO Err
+	return ""
 }
