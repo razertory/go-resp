@@ -1,11 +1,13 @@
 package server
 
 const (
+	CMDSet = "set"
+	CMDGet = "get"
 	CodeOk = "OK"
 )
 
 func doSet(key string, value string) *Reply {
-	kvs[key] = value
+	applicationKV.Store(key, value)
 	return &Reply{
 		Type: ReplyTypeCode,
 		Code: CodeOk,
@@ -17,7 +19,7 @@ func doGet(key string) *Reply {
 		Type: ReplyTypeBulk,
 		Data: "",
 	}
-	v := kvs[key]
+	v, _ := applicationKV.Load(key)
 	if v != nil {
 		reply.Data = v.(string)
 	}

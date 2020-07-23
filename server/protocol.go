@@ -10,9 +10,6 @@ import (
 )
 
 const (
-	// CMD
-	CMDSet          = "set"
-	CMDGet          = "get"
 	ProtoPrefix     = '*'
 	ReplyTypeCode   = "code"
 	ReplyTypeNumber = "number"

@@ -1,8 +1,11 @@
 package server
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-var kvs = make(map[string]interface{})
+var applicationKV = sync.Map{}
 
 func apply(request *Request) (*Reply, error) {
 	var reply = &Reply{}
