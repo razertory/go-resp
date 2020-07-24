@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net"
 )
 
@@ -38,6 +39,7 @@ func handleConn(conn net.Conn) {
 			continue
 		}
 		data := parseReply(reply)
+		fmt.Printf("reply %s", data)
 		conn.Write([]byte(data))
 	}
 }

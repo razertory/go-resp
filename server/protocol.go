@@ -142,6 +142,21 @@ func bulkReply(data interface{}) string {
 			}
 			return "$" + strconv.Itoa(l) + "\r\n" + string(v)
 		}
+	case []string:
+		{
+			l := len(v)
+			if l == 0 {
+				return "$-1"
+			}
+			var str = "*" + strconv.Itoa(l) + "\r\n"
+			for i := 0; i < len(v)-1; i++ {
+				s := v[i]
+				str += "$" + strconv.Itoa(len(s)) + "\r\n" + s + "\r\n"
+			}
+			last := v[len(v)-1]
+			str += "$" + strconv.Itoa(len(last)) + "\r\n" + last
+			return str
+		}
 	case int:
 		{
 			return ":" + strconv.Itoa(v)

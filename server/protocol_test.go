@@ -84,6 +84,13 @@ var replyExpects = []struct {
 		},
 		"$4\r\nlove\r\n",
 	},
+	{
+		&Reply{
+			Type: ReplyTypeBulk,
+			Data: []string{"I", "love", "you"},
+		},
+		"*3\r\n$1\r\nI\r\n$4\r\nlove\r\n$3\r\nyou\r\n",
+	},
 }
 
 func TestParseReply(t *testing.T) {
