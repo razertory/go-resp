@@ -43,7 +43,3 @@ func handleConn(conn net.Conn) {
 		conn.Write([]byte(data))
 	}
 }
-
-func redisErr(err error) string {
-	return "-ERR " + err.Error() + "\r\n"
-}

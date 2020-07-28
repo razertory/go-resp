@@ -74,40 +74,26 @@ func readProto(line string, r *bufio.Reader) (*Request, error) {
 func readArgument(r *bufio.Reader) ([]byte, error) {
 	line, err := r.ReadString('\n')
 	if err != nil {
-		return nil, malformed("$<argumentLength>", line)
+		return nil, fmt.Errorf("length err %s" + line)
 	}
 	var argSize int
 	if _, err := fmt.Sscanf(line, "$%d\r", &argSize); err != nil {
-		return nil, malformed("$<argumentSize>", line)
+		return nil, fmt.Errorf("length err %s", line)
 	}
 	data, err := ioutil.ReadAll(io.LimitReader(r, int64(argSize)))
 	if err != nil {
 		return nil, err
 	}
 	if len(data) != argSize {
-		return nil, malformedLength(argSize, len(data))
+		return nil, fmt.Errorf("length err %d", len(data))
 	}
 	if b, err := r.ReadByte(); err != nil || b != '\r' {
-		return nil, malformedMissingCRLF()
+		return nil, fmt.Errorf("missing CRLF")
 	}
 	if b, err := r.ReadByte(); err != nil || b != '\n' {
-		return nil, malformedMissingCRLF()
+		return nil, fmt.Errorf("missing CRLF")
 	}
 	return data, nil
-}
-
-func malformed(expected string, got string) error {
-	return fmt.Errorf("Mailformed request:'%str does not match %str\\r\\n'", got, expected)
-}
-
-func malformedLength(expected int, got int) error {
-	return fmt.Errorf(
-		"Mailformed request: argument length '%d does not match %d\\r\\n'",
-		got, expected)
-}
-
-func malformedMissingCRLF() error {
-	return fmt.Errorf("Mailformed request: line should end with \\r\\n")
 }
 
 func parseReply(reply *Reply) string {
@@ -163,4 +149,8 @@ func bulkReply(data interface{}) string {
 		}
 	}
 	return ""
+}
+
+func redisErr(err error) string {
+	return "-ERR " + err.Error() + "\r\n"
 }
