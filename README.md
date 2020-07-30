@@ -6,6 +6,7 @@ A RESP(Redis Serialization Protocol) DB written in go.
 
 - `go run cmd/main.go`
 - redis-cli -p 50000
+
 samples:
 
 ```shell
